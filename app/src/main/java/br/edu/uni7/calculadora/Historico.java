@@ -1,7 +1,6 @@
 package br.edu.uni7.calculadora;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,35 +11,35 @@ import java.util.List;
 
 public class Historico extends AppCompatActivity {
 
-  private List<String> expressoes;
-  private RecyclerView rvExpressoes;
-  private ExpressoesAdapter eAdapter;
+  private List<String> historico;
+  private RecyclerView rvHistorico;
+  private HistoricoAdapter mAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.expressao_layout);
+    setContentView(R.layout.historico_layout);
     carregahistorico();
-    rvExpressoes = (RecyclerView) findViewById(R.id.rv_historico);
-    rvExpressoes.addItemDecoration(new SpacesItemDecoration(2));
-    rvExpressoes.setHasFixedSize(true);
+    rvHistorico = (RecyclerView) findViewById(R.id.rv_historico);
+    rvHistorico.addItemDecoration(new SpacesItemDecoration(2));
+    rvHistorico.setHasFixedSize(true);
 
     int scrollPosition = 0;
-    if (rvExpressoes.getLayoutManager() != null) {
-      scrollPosition = ((LinearLayoutManager) rvExpressoes.getLayoutManager())
+    if (rvHistorico.getLayoutManager() != null) {
+      scrollPosition = ((LinearLayoutManager) rvHistorico.getLayoutManager())
           .findFirstCompletelyVisibleItemPosition();
     }
 
-    rvExpressoes.setLayoutManager(new LinearLayoutManager(this));
-    rvExpressoes.scrollToPosition(scrollPosition);
-    rvExpressoes.setItemAnimator(new DefaultItemAnimator());
+    rvHistorico.setLayoutManager(new LinearLayoutManager(this));
+    rvHistorico.scrollToPosition(scrollPosition);
+    rvHistorico.setItemAnimator(new DefaultItemAnimator());
 
-    eAdapter = new ExpressoesAdapter(expressoes);
-    rvExpressoes.setAdapter(eAdapter);
+    mAdapter = new HistoricoAdapter(historico);
+    rvHistorico.setAdapter(mAdapter);
   }
 
   private void carregahistorico() {
     Intent it = getIntent();
-    expressoes = it.getStringArrayListExtra("historico");
+    historico = it.getStringArrayListExtra("historico");
   }
 }

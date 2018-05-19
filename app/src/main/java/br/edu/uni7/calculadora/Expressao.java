@@ -113,18 +113,29 @@ class Expressao {
         op = (Operador) e;
       } else {
         if (op.equals(SOMA)) {
-          Operando op1 = (Operando) e;
-          double val = op1.getValorNumerico();
-          resultado = resultado + val; // ((Operando) e).getValorNumerico();
+          resultado = resultado + ((Operando) e).getValorNumerico();
         } else {
           resultado -= ((Operando) e).getValorNumerico();
         }
       }
     }
-    return String.valueOf(resultado).replace('.', ',');
+    String resultadoFinal = String.valueOf(resultado).replace('.', ',');
+    int indiceVirgula = resultadoFinal.indexOf(',');
+    String decimais = resultadoFinal.substring(indiceVirgula + 1);
+    if (decimais.length() > 2) {
+      decimais = decimais.substring(0, 2);
+    }
+    Integer decimaisInteger = Integer.valueOf(decimais);
+    int decimaisInt = decimaisInteger.intValue();
+    if (decimaisInt == 0) {
+      resultadoFinal = resultadoFinal.substring(0,indiceVirgula);
+    } else {
+      resultadoFinal = resultadoFinal.substring(0,indiceVirgula + 3);
+    }
+    return resultadoFinal;
   }
 
-  public String getExpressao(){
+  String getExpressao(){
     StringBuilder expressaoSB = new StringBuilder();
     for (int i = 0; i < expressao.size(); i++) {
       expressaoSB.append(expressao.get(i).toString());

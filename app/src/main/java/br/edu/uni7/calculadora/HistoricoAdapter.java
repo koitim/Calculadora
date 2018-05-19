@@ -8,42 +8,42 @@ import android.widget.TextView;
 
 import java.util.List;
 
-class ExpressoesAdapter extends RecyclerView.Adapter<ExpressoesAdapter.ViewHolder>{
+class HistoricoAdapter extends RecyclerView.Adapter<HistoricoAdapter.ViewHolder>{
 
-  private List<String> expressoes;
+  private List<String> historico;
 
-  public ExpressoesAdapter(List<String> expressoes) {
-    this.expressoes = expressoes;
+  public HistoricoAdapter(List<String> historico) {
+    this.historico = historico;
   }
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
     View v = LayoutInflater.from(viewGroup.getContext())
-        .inflate(R.layout.expressao_row_item, viewGroup, false);
+        .inflate(R.layout.historico_row_item, viewGroup, false);
     return new ViewHolder(v);
   }
 
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int position) {
-    viewHolder.setTextView(expressoes.get(position));
+    viewHolder.setTextView(historico.get(position));
   }
 
   @Override
   public int getItemCount() {
-    return expressoes.size();
+    return historico.size();
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView tvExpressao;
+    private final TextView tvHistorico;
 
     public ViewHolder(View v) {
       super(v);
-      tvExpressao = (TextView) v.findViewById(R.id.tv_expressao_item);
+      tvHistorico = (TextView) v.findViewById(R.id.tv_historico_item);
     }
 
     public void setTextView(String expressao) {
-      tvExpressao.setText(expressao);
+      tvHistorico.setText(expressao);
     }
   }
 }
