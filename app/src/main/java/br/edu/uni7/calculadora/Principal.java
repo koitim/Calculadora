@@ -28,7 +28,7 @@ public class Principal extends AppCompatActivity implements View.OnClickListener
     super.onCreate(savedInstanceState);
     setContentView(R.layout.principal_layout);
     carregarHistorico();
-    expressaoAtual          = new Expressao();
+    expressaoAtual          = new Expressao(this);
     expressaoAtualConcluida = false;
     inicializaComponentes();
   }
@@ -74,14 +74,14 @@ public class Principal extends AppCompatActivity implements View.OnClickListener
   }
 
   private void carregarHistorico() {
-    pref = getApplicationContext().getSharedPreferences("HistoricoCalculadora",0);
+    pref = getApplicationContext().getSharedPreferences(getString(R.string.parametro_historico_armazenamento),0);
     historico = new ArrayList<>();
     int i = 0;
-    String expressao = pref.getString(String.valueOf(i), "");
-    while (!expressao.equals("")) {
+    String expressao = pref.getString(String.valueOf(i), getString(R.string.texto_nulo));
+    while (!expressao.equals(getString(R.string.texto_nulo))) {
       historico.add(expressao);
       i++;
-      expressao = pref.getString(String.valueOf(i), "");
+      expressao = pref.getString(String.valueOf(i), getString(R.string.texto_nulo));
     }
   }
 
@@ -124,19 +124,13 @@ public class Principal extends AppCompatActivity implements View.OnClickListener
   }
 
   private void adicionaNumero(String operando) {
-    if (expressaoAtualConcluida) {
-      tv_exibe.setText("");
-      expressaoAtualConcluida = false;
-    }
+    verificaFinalizacaoExpressao();
     expressaoAtual.addOperando(operando);
     tv_exibe.setText(expressaoAtual.getExpressao());
   }
 
   private void adicionaVirgula() {
-    if (expressaoAtualConcluida) {
-      tv_exibe.setText("");
-      expressaoAtualConcluida = false;
-    }
+    verificaFinalizacaoExpressao();
     expressaoAtual.addVirgula();
     tv_exibe.setText(expressaoAtual.getExpressao());
   }
@@ -148,7 +142,7 @@ public class Principal extends AppCompatActivity implements View.OnClickListener
       editor.putString(String.valueOf(historico.size()), resultadoAtual);
       editor.apply();
       historico.add(resultadoAtual);
-      expressaoAtual = new Expressao();
+      expressaoAtual = new Expressao(this);
       tv_exibe.setText(resultadoAtual);
       expressaoAtualConcluida = true;
     } catch (ExpressaoException e) {
@@ -157,23 +151,30 @@ public class Principal extends AppCompatActivity implements View.OnClickListener
   }
 
   private void adicionaOperador(String operador) {
-    if (expressaoAtualConcluida) {
-      tv_exibe.setText("");
-      expressaoAtualConcluida = false;
-    }
+    verificaFinalizacaoExpressao();
     expressaoAtual.addOperador(operador);
     tv_exibe.setText(expressaoAtual.getExpressao());
   }
 
+  private void verificaFinalizacaoExpressao() {
+    if (expressaoAtualConcluida) {
+      finalizaExpressao();
+    }
+  }
+
   private void exibeHistorico() {
     Intent it = new Intent(this, Historico.class);
-    it.putStringArrayListExtra("historico", (ArrayList) historico);
+    it.putStringArrayListExtra(getString(R.string.parametro_historico), (ArrayList) historico);
     startActivity(it);
   }
 
   private void limpaTela() {
-    expressaoAtual = new Expressao();
-    tv_exibe.setText("");
+    finalizaExpressao();
+    expressaoAtual = new Expressao(this);
+  }
+
+  private void finalizaExpressao() {
+    tv_exibe.setText(getString(R.string.texto_nulo));
     expressaoAtualConcluida = false;
   }
 }

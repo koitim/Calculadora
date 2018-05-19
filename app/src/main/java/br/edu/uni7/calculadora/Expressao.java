@@ -1,26 +1,35 @@
 package br.edu.uni7.calculadora;
 
+import android.app.Activity;
+
 import java.util.ArrayList;
 
 class Expressao {
-  private final int    OPERANDO  	   = 1;
-  private final int    OPERADOR        = 2;
-  private final Operador MULTIPLICACAO = new Operador("x");
-  private final Operador DIVISAO       = new Operador("/");
-  private final Operador SUBTRACAO     = new Operador("-");
-  private final Operador SOMA          = new Operador("+");
-  private final String VIRGULA   	   = ",";
+  private final int      OPERANDO = 1;
+  private final int      OPERADOR = 2;
+  private final Operador MULTIPLICA;
+  private final Operador DIVIDE;
+  private final Operador SUBTRAI;
+  private final Operador SOMA;
+  private final String   VIRGULA;
+  private final String   TEXTO_NULO;
 
   private int                 elementoAtual;
   private Operando            operando;
   private Operador            operador;
   private ArrayList<Elemento> expressao;
 
-  Expressao() {
+  Expressao(Activity tela) {
     elementoAtual = OPERANDO;
     operando      = new Operando();
     expressao     = new ArrayList<>();
     expressao.add(operando);
+    MULTIPLICA = new Operador(tela.getString(R.string.multiplica));
+    DIVIDE     = new Operador(tela.getString(R.string.divide));
+    SUBTRAI    = new Operador(tela.getString(R.string.subtrai));
+    SOMA       = new Operador(tela.getString(R.string.soma));
+    VIRGULA    = tela.getString(R.string.virgula);
+    TEXTO_NULO = tela.getString(R.string.texto_nulo);
   }
 
   void addOperando(String i) {
@@ -50,7 +59,7 @@ class Expressao {
       if (operador.equals(this.operador.toString())) {
         return;
       }
-      if (operador.equals(SUBTRACAO.toString())) {
+      if (operador.equals(SUBTRAI.toString())) {
         elementoAtual = OPERANDO;
         operando      = new Operando(operador);
         expressao.add(operando);
@@ -59,11 +68,11 @@ class Expressao {
       }
     } else {
       if (operando.toString().equals("")) {
-        if (operador.equals(SUBTRACAO.toString())) {
+        if (operador.equals(SUBTRAI.toString())) {
           operando.add(operador);
         }
       } else {
-        if (!operando.toString().equals(SUBTRACAO.toString())) {
+        if (!operando.toString().equals(SUBTRAI.toString())) {
           elementoAtual = OPERADOR;
           this.operador = new Operador(operador);
           expressao.add(this.operador);
@@ -80,14 +89,14 @@ class Expressao {
         expressaoReduzida.add(new Operando(e.toString()));
       } else {
         Operador o = (Operador) e;
-        if (o.equals(MULTIPLICACAO) || o.equals(DIVISAO)) {
+        if (o.equals(MULTIPLICA) || o.equals(DIVIDE)) {
           if (i == (expressao.size() - 1)) {
             throw new ExpressaoMalFormadaException();
           }
           Operando operando1 = ((Operando) expressaoReduzida.get(expressaoReduzida.size() - 1));
           Operando operando2 = ((Operando) expressao.get(i + 1));
           double resultadoTemporario;
-          if (o.equals(MULTIPLICACAO)) {
+          if (o.equals(MULTIPLICA)) {
             resultadoTemporario = operando1.getValorNumerico() * operando2.getValorNumerico();
           } else {
             if (operando2.getValorNumerico() == 0) {
@@ -125,12 +134,14 @@ class Expressao {
     if (decimais.length() > 2) {
       decimais = decimais.substring(0, 2);
     }
-    Integer decimaisInteger = Integer.valueOf(decimais);
-    int decimaisInt = decimaisInteger.intValue();
-    if (decimaisInt == 0) {
+    if (Integer.valueOf(decimais).intValue() == 0) {
       resultadoFinal = resultadoFinal.substring(0,indiceVirgula);
     } else {
-      resultadoFinal = resultadoFinal.substring(0,indiceVirgula + 3);
+      if (decimais.length() == 2) {
+        resultadoFinal = resultadoFinal.substring(0,indiceVirgula + 3);
+      } else {
+        resultadoFinal = resultadoFinal.substring(0,indiceVirgula + 2);
+      }
     }
     return resultadoFinal;
   }
@@ -189,20 +200,23 @@ class Expressao {
     }
 
     private void calculaValorNumerico() {
+      valorNumerico = 0;
       String valorString = getValor().toString();
-      boolean inverterSinal = valorString.substring(0,0).equals(SUBTRACAO.toString());
+      boolean inverterSinal = valorString.substring(0,1).equals(SUBTRAI.toString());
       if (inverterSinal) {
         valorString = valorString.substring(1);
       }
-      if (valorString.substring(0,1).equals(VIRGULA)) {
-        valorString = "0" + valorString;
-      }
-      if (valorString.substring(valorString.indexOf(VIRGULA)+1).equals("")) {
-        valorString = valorString + "0";
-      }
-      valorNumerico = Double.valueOf(valorString.replace(',', '.'));
-      if (inverterSinal) {
-        valorNumerico = valorNumerico * -1;
+      if (!valorString.equals(TEXTO_NULO)) {
+        if (valorString.substring(0, 1).equals(VIRGULA)) {
+          valorString = "0" + valorString;
+        }
+        if (valorString.substring(valorString.indexOf(VIRGULA) + 1).equals("")) {
+          valorString = valorString + "0";
+        }
+        valorNumerico = Double.valueOf(valorString.replace(',', '.'));
+        if (inverterSinal) {
+          valorNumerico = valorNumerico * -1;
+        }
       }
     }
 

@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Calculadora</string>
+    <string name="sete">7</string>
+    <string name="oito">8</string>
+    <string name="nove">9</string>
+    <string name="divide">/</string>
+    <string name="quatro">4</string>
+    <string name="cinco">5</string>
+    <string name="seis">6</string>
+    <string name="multiplica">x</string>
+    <string name="um">1</string>
+    <string name="dois">2</string>
+    <string name="tres">3</string>
+    <string name="subtrai">-</string>
+    <string name="zero">0</string>
+    <string name="virgula">,</string>
+    <string name="igual">=</string>
+    <string name="soma">+</string>
+    <string name="historico">Mostrar histórico</string>
+    <string name="limpa">Limpar</string>
+    <string name="parametro_historico">historico</string>
+    <string name="parametro_historico_armazenamento">HistoricoCalculadora</string>
+    <string name="texto_nulo"></string>
 </resources>

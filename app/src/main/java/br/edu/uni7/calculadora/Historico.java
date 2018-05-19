@@ -12,15 +12,13 @@ import java.util.List;
 public class Historico extends AppCompatActivity {
 
   private List<String> historico;
-  private RecyclerView rvHistorico;
-  private HistoricoAdapter mAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.historico_layout);
     carregahistorico();
-    rvHistorico = (RecyclerView) findViewById(R.id.rv_historico);
+    RecyclerView rvHistorico = (RecyclerView) findViewById(R.id.rv_historico);
     rvHistorico.addItemDecoration(new SpacesItemDecoration(2));
     rvHistorico.setHasFixedSize(true);
 
@@ -34,12 +32,12 @@ public class Historico extends AppCompatActivity {
     rvHistorico.scrollToPosition(scrollPosition);
     rvHistorico.setItemAnimator(new DefaultItemAnimator());
 
-    mAdapter = new HistoricoAdapter(historico);
+    HistoricoAdapter mAdapter = new HistoricoAdapter(historico);
     rvHistorico.setAdapter(mAdapter);
   }
 
   private void carregahistorico() {
     Intent it = getIntent();
-    historico = it.getStringArrayListExtra("historico");
+    historico = it.getStringArrayListExtra(getString(R.string.parametro_historico));
   }
 }
